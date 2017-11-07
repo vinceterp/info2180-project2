@@ -1,14 +1,16 @@
-window.onload= function events(){
+/* EXTRA FEATURE
+--> MULTIPLE BACKGROUNDS
+*/
 
+window.onload= function events(){
   puzzleArray= document.getElementById("puzzlearea").children;
+  randomBackground();
   puzzlePieces();
   backgroundPositions();
   squareIds();
   movement();
   lightUp();
-
-  shuffleButton= document.getElementById("shufflebutton");
-  shuffleButton.onclick= shuffle;
+  backgroundSetup();
 }
 
 var gapRow= 3;
@@ -234,10 +236,10 @@ function lightUp(){
       pieceRow= puzzleArray[i].getAttribute("row");
       pieceCol= puzzleArray[i].getAttribute("col");
 
-      var rowTest1= (pieceRow== gapRow) && (pieceCol== gapCol-1);
-      var colTest1= (pieceCol== gapCol) && (pieceRow== gapRow-1);
-      var rowTest2= (pieceRow== gapRow) && (pieceCol== gapCol+1);
-      var colTest2= (pieceCol== gapCol) && (pieceRow== gapRow+1);
+      var rowTest1= (pieceRow== gapRow) && (pieceCol== parseInt(gapCol)-1);
+      var colTest1= (pieceCol== gapCol) && (pieceRow== parseInt(gapRow)-1);
+      var rowTest2= (pieceRow== gapRow) && (pieceCol== parseInt(gapCol)+1);
+      var colTest2= (pieceCol== gapCol) && (pieceRow== parseInt(gapRow)+1);
 
       if (rowTest1 || rowTest2 || colTest2 || colTest1){
         puzzleArray[i].classList.add("movablepiece");
@@ -336,4 +338,59 @@ function shuffle(){
   for (let i=0; i<300; i++){
     singleShuffle();
   }
+}
+
+function randomBackground(){
+  var urls= ["url('drake.jpg')", "url('santan.jpg')", "url('stormzy.jpg')", "url('background.jpg')"];
+  var selection= Math.floor(Math.random()*4);
+  var choice= urls[selection];
+  for (let i=0; i<puzzleArray.length; i++){
+    puzzleArray[i].style.backgroundImage= choice;
+  }
+}
+
+function backgroundSetup(){
+  shuffleButton= document.getElementById("shufflebutton");
+  shuffleButton.onclick= shuffle;
+
+  var backgroundChoice= document.createElement("select");
+
+  var popcaan= document.createElement("option");
+  popcaan.text= "Popcaan";
+
+  var drake= document.createElement("option");
+  drake.text= "Drake";
+
+  var stormzy= document.createElement("option");
+  stormzy.text= "Stormzy";
+
+  var santan= document.createElement("option");
+  santan.text= "Santan Dave";
+
+  backgroundChoice.add(popcaan);
+  backgroundChoice.add(drake);
+  backgroundChoice.add(stormzy);
+  backgroundChoice.add(santan);
+
+  backgroundChoice.onchange= function(){
+    if (this.value=="Drake"){
+      for (let i=0; i<puzzleArray.length; i++){
+        puzzleArray[i].style.backgroundImage= "url('drake.jpg')";
+      }
+    }else if (this.value== "Santan Dave"){
+      for (let i=0; i<puzzleArray.length; i++){
+        puzzleArray[i].style.backgroundImage= "url('santan.jpg')";
+      }
+    }else if (this.value== "Stormzy"){
+      for (let i=0; i<puzzleArray.length; i++){
+        puzzleArray[i].style.backgroundImage= "url('stormzy.jpg')";
+      }
+    }else if(this.value== "Popcaan"){
+      for (let i=0; i<puzzleArray.length; i++){
+        puzzleArray[i].style.backgroundImage= "url('background.jpg')";
+      }
+    }
+  }
+
+  document.getElementById("overall").appendChild(backgroundChoice);
 }
