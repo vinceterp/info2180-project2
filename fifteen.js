@@ -1,12 +1,23 @@
 window.onload= function events(){
+
+  puzzleArray= document.getElementById("puzzlearea").children;
   puzzlePieces();
   backgroundPositions();
   squareIds();
+  movement();
+  lightUp();
+
+  shuffleButton= document.getElementById("shufflebutton");
+  shuffleButton.onclick= shuffle;
 }
 
-function puzzlePieces(){
+var gapRow= 3;
+var gapCol= 3;
 
-  puzzleArray= document.getElementById("puzzlearea").children;
+var tempRow;
+var tempCol;
+
+function puzzlePieces(){
 
   for (var i=0; i<puzzleArray.length; i++){
     puzzleArray[i].classList.add("puzzlepiece");
@@ -49,8 +60,6 @@ function puzzlePieces(){
 
 function backgroundPositions(){
 
-  puzzleArray= document.getElementById("puzzlearea").children;
-
   //FIRST ROW
   puzzleArray[0].style.backgroundPosition= "0px 0px";
   puzzleArray[1].style.backgroundPosition= "-100px 0px";
@@ -77,8 +86,6 @@ function backgroundPositions(){
 
 function squareIds(){
 
-  puzzleArray= document.getElementById("puzzlearea").children;
-
   puzzleArray[0].setAttribute("id", "square_1_1");
   puzzleArray[1].setAttribute("id", "square_1_2");
   puzzleArray[2].setAttribute("id", "square_1_3");
@@ -97,4 +104,236 @@ function squareIds(){
   puzzleArray[12].setAttribute("id", "square_4_1");
   puzzleArray[13].setAttribute("id", "square_4_2");
   puzzleArray[14].setAttribute("id", "square_4_3");
+
+  /*var n=0;
+  for (let i=1; i<5; i++){
+    for (let j=1; j<5; j++){
+        puzzleArray[n].setAttribute("row", i);
+        puzzleArray[n].setAttribute("col", j);
+    }
+  }*/
+
+  puzzleArray[0].setAttribute("row", "0");
+  puzzleArray[0].setAttribute("col", "0");
+
+  puzzleArray[1].setAttribute("row", "0");
+  puzzleArray[1].setAttribute("col", "1");
+
+  puzzleArray[2].setAttribute("row", "0");
+  puzzleArray[2].setAttribute("col", "2");
+
+  puzzleArray[3].setAttribute("row", "0");
+  puzzleArray[3].setAttribute("col", "3");
+
+  puzzleArray[4].setAttribute("row", "1");
+  puzzleArray[4].setAttribute("col", "0");
+
+  puzzleArray[5].setAttribute("row", "1");
+  puzzleArray[5].setAttribute("col", "1");
+
+  puzzleArray[6].setAttribute("row", "1");
+  puzzleArray[6].setAttribute("col", "2");
+
+  puzzleArray[7].setAttribute("row", "1");
+  puzzleArray[7].setAttribute("col", "3");
+
+  puzzleArray[8].setAttribute("row", "2");
+  puzzleArray[8].setAttribute("col", "0");
+
+  puzzleArray[9].setAttribute("row", "2");
+  puzzleArray[9].setAttribute("col", "1");
+
+  puzzleArray[10].setAttribute("row", "2");
+  puzzleArray[10].setAttribute("col", "2");
+
+  puzzleArray[11].setAttribute("row", "2");
+  puzzleArray[11].setAttribute("col", "3");
+
+  puzzleArray[12].setAttribute("row", "3");
+  puzzleArray[12].setAttribute("col", "0");
+
+  puzzleArray[13].setAttribute("row", "3");
+  puzzleArray[13].setAttribute("col", "1");
+
+  puzzleArray[14].setAttribute("row", "3");
+  puzzleArray[14].setAttribute("col", "2");
+
+}
+
+function movement(){
+  for(let i=0; i<puzzleArray.length; i++){
+    puzzleArray[i].onclick= moveTile;
+  }
+}
+
+function moveTile(){
+
+  pieceRow= this.getAttribute("row");
+  pieceCol= this.getAttribute("col");
+
+  var rowTest1= (pieceRow== gapRow) && (pieceCol== parseInt(gapCol)-1);
+  var colTest1= (pieceCol== gapCol) && (pieceRow== parseInt(gapRow)-1);
+  var rowTest2= (pieceRow== gapRow) && (pieceCol== parseInt(gapCol)+1);
+  var colTest2= (pieceCol== gapCol) && (pieceRow== parseInt(gapRow)+1);
+
+
+  if (rowTest1){
+
+    this.style.left= (gapCol * 100) + "px";
+
+    tempRow= this.getAttribute("row");
+    tempCol= this.getAttribute("col");
+
+    this.setAttribute("row", gapRow);
+    this.setAttribute("col", gapCol);
+
+    gapRow= tempRow;
+    gapCol= tempCol;
+  }else if (colTest1) {
+
+    this.style.top= (gapRow * 100) +"px";
+
+    tempRow= this.getAttribute("row");
+    tempCol= this.getAttribute("col");
+
+    this.setAttribute("row", gapRow);
+    this.setAttribute("col", gapCol);
+
+    gapRow= tempRow;
+    gapCol= tempCol;
+  }else if (rowTest2) {
+
+    this.style.left= (gapCol * 100) + "px";
+
+    tempRow= this.getAttribute("row");
+    tempCol= this.getAttribute("col");
+
+    this.setAttribute("row", gapRow);
+    this.setAttribute("col", gapCol);
+
+    gapRow= tempRow;
+    gapCol= tempCol;
+  }else if (colTest2) {
+
+    this.style.top= (gapRow * 100) + "px";
+
+    tempRow= this.getAttribute("row");
+    tempCol= this.getAttribute("col");
+
+    this.setAttribute("row", gapRow);
+    this.setAttribute("col", gapCol);
+
+    gapRow= tempRow;
+    gapCol= tempCol;
+  }
+}
+
+function lightUp(){
+  for (let i=0; i<puzzleArray.length; i++){
+    puzzleArray[i].onmouseover= function(){
+      pieceRow= puzzleArray[i].getAttribute("row");
+      pieceCol= puzzleArray[i].getAttribute("col");
+
+      var rowTest1= (pieceRow== gapRow) && (pieceCol== gapCol-1);
+      var colTest1= (pieceCol== gapCol) && (pieceRow== gapRow-1);
+      var rowTest2= (pieceRow== gapRow) && (pieceCol== gapCol+1);
+      var colTest2= (pieceCol== gapCol) && (pieceRow== gapRow+1);
+
+      if (rowTest1 || rowTest2 || colTest2 || colTest1){
+        puzzleArray[i].classList.add("movablepiece");
+      }
+    }
+    puzzleArray[i].onmouseout= function(){
+      this.classList.remove("movablepiece");
+    }
+  }
+}
+
+function singleShuffle(){
+
+  tileArray= findATile();
+  var randomPiece= Math.floor(Math.random()* tileArray.length);
+  puzzlePiece= tileArray[randomPiece];
+
+  pieceRow= puzzlePiece.getAttribute("row");
+  pieceCol= puzzlePiece.getAttribute("col");
+
+  var rowTest1= (pieceRow== gapRow) && (pieceCol== parseInt(gapCol)-1);
+  var colTest1= (pieceCol== gapCol) && (pieceRow== parseInt(gapRow)-1);
+  var rowTest2= (pieceRow== gapRow) && (pieceCol== parseInt(gapCol)+1);
+  var colTest2= (pieceCol== gapCol) && (pieceRow== parseInt(gapRow)+1);
+
+  if (rowTest1){
+
+    puzzlePiece.style.left= (gapCol * 100) + "px";
+
+    tempRow= puzzlePiece.getAttribute("row");
+    tempCol= puzzlePiece.getAttribute("col");
+
+    puzzlePiece.setAttribute("row", gapRow);
+    puzzlePiece.setAttribute("col", gapCol);
+
+    gapRow= tempRow;
+    gapCol= tempCol;
+  }else if (colTest1) {
+
+    puzzlePiece.style.top= (gapRow * 100) +"px";
+
+    tempRow= puzzlePiece.getAttribute("row");
+    tempCol= puzzlePiece.getAttribute("col");
+
+    puzzlePiece.setAttribute("row", gapRow);
+    puzzlePiece.setAttribute("col", gapCol);
+
+    gapRow= tempRow;
+    gapCol= tempCol;
+  }else if (rowTest2) {
+
+    puzzlePiece.style.left= (gapCol * 100) + "px";
+
+    tempRow= puzzlePiece.getAttribute("row");
+    tempCol= puzzlePiece.getAttribute("col");
+
+    puzzlePiece.setAttribute("row", gapRow);
+    puzzlePiece.setAttribute("col", gapCol);
+
+    gapRow= tempRow;
+    gapCol= tempCol;
+  }else if (colTest2) {
+
+    puzzlePiece.style.top= (gapRow * 100) + "px";
+
+    tempRow= puzzlePiece.getAttribute("row");
+    tempCol= puzzlePiece.getAttribute("col");
+
+    puzzlePiece.setAttribute("row", gapRow);
+    puzzlePiece.setAttribute("col", gapCol);
+
+    gapRow= tempRow;
+    gapCol= tempCol;
+  }
+}
+
+function findATile(){
+  goodTiles= [];
+  for(let i=0; i<puzzleArray.length; i++){
+    pieceRow= puzzleArray[i].getAttribute("row");
+    pieceCol= puzzleArray[i].getAttribute("col");
+
+    var rowTest1= (pieceRow== gapRow) && (pieceCol== parseInt(gapCol)-1);
+    var colTest1= (pieceCol== gapCol) && (pieceRow== parseInt(gapRow)-1);
+    var rowTest2= (pieceRow== gapRow) && (pieceCol== parseInt(gapCol)+1);
+    var colTest2= (pieceCol== gapCol) && (pieceRow== parseInt(gapRow)+1);
+
+    if (rowTest1 || rowTest2 || colTest2 || colTest1){
+      goodTiles.push(puzzleArray[i]);
+    }
+  }
+  return goodTiles;
+}
+
+function shuffle(){
+  for (let i=0; i<300; i++){
+    singleShuffle();
+  }
 }

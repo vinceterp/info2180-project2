@@ -52,7 +52,7 @@ h1 {
 }
 
 /* This class should be applied to a puzzle piece that can be moved. */
-.movablepiece:hover {
+.movablepiece:hover{
 	border-color: red;
 	color: #006600;
 	text-decoration: underline;
